@@ -47,6 +47,43 @@ def supports_color():
     return True
 
 
+def _colorize_segment(a, b, use_color=True):
+    """
+    为单个碱基对添加颜色标记
+    
+    Args:
+        a: 序列1的碱基
+        b: 序列2的碱基
+        use_color: 是否使用颜色
+        
+    Returns:
+        (colored_a, colored_b, match_char) 元组
+    """
+    color_supported = supports_color() and use_color
+    
+    if a == '-' or b == '-':
+        if color_supported:
+            return (f"{Colors.YELLOW}{a}{Colors.RESET}", 
+                    f"{Colors.YELLOW}{b}{Colors.RESET}", 
+                    ' ')
+        else:
+            return (a, b, ' ')
+    elif a == b:
+        if color_supported:
+            return (f"{Colors.GREEN}{a}{Colors.RESET}", 
+                    f"{Colors.GREEN}{b}{Colors.RESET}", 
+                    '|')
+        else:
+            return (a, b, '|')
+    else:
+        if color_supported:
+            return (f"{Colors.RED}{a}{Colors.RESET}", 
+                    f"{Colors.RED}{b}{Colors.RESET}", 
+                    '*')
+        else:
+            return (a, b, '*')
+
+
 def color_alignment(result, use_color=True):
     """
     为比对结果添加颜色标记
@@ -65,33 +102,40 @@ def color_alignment(result, use_color=True):
     colored2 = []
     match_line = []
     
-    color_supported = supports_color() and use_color
-    
     for a, b in zip(aligned1, aligned2):
-        if a == '-' or b == '-':
-            if color_supported:
-                colored1.append(f"{Colors.YELLOW}{a}{Colors.RESET}")
-                colored2.append(f"{Colors.YELLOW}{b}{Colors.RESET}")
-            else:
-                colored1.append(a)
-                colored2.append(b)
-            match_line.append(' ')
-        elif a == b:
-            if color_supported:
-                colored1.append(f"{Colors.GREEN}{a}{Colors.RESET}")
-                colored2.append(f"{Colors.GREEN}{b}{Colors.RESET}")
-            else:
-                colored1.append(a)
-                colored2.append(b)
-            match_line.append('|')
-        else:
-            if color_supported:
-                colored1.append(f"{Colors.RED}{a}{Colors.RESET}")
-                colored2.append(f"{Colors.RED}{b}{Colors.RESET}")
-            else:
-                colored1.append(a)
-                colored2.append(b)
-            match_line.append('*')
+        ca, cb, mc = _colorize_segment(a, b, use_color)
+        colored1.append(ca)
+        colored2.append(cb)
+        match_line.append(mc)
+    
+    return (
+        ''.join(colored1),
+        ''.join(colored2),
+        ''.join(match_line)
+    )
+
+
+def _colorize_chunk(chunk1, chunk2, use_color=True):
+    """
+    为一段序列切片添加颜色
+    
+    Args:
+        chunk1: 序列1的切片
+        chunk2: 序列2的切片
+        use_color: 是否使用颜色
+        
+    Returns:
+        (colored_chunk1, colored_chunk2, match_chunk) 元组
+    """
+    colored1 = []
+    colored2 = []
+    match_line = []
+    
+    for a, b in zip(chunk1, chunk2):
+        ca, cb, mc = _colorize_segment(a, b, use_color)
+        colored1.append(ca)
+        colored2.append(cb)
+        match_line.append(mc)
     
     return (
         ''.join(colored1),
@@ -109,12 +153,10 @@ def print_alignment(result, name1='Sequence1', name2='Sequence2',
         result: AlignmentResult对象
         name1: 第一条序列名称
         name2: 第二条序列名称
-        line_width: 每行显示的宽度
+        line_width: 每行显示的宽度（碱基数量）
         use_color: 是否使用彩色
         show_positions: 是否显示位置编号
     """
-    colored1, colored2, match_line = color_alignment(result, use_color)
-    
     raw1 = result.seq1_aligned
     raw2 = result.seq2_aligned
     
@@ -129,11 +171,12 @@ def print_alignment(result, name1='Sequence1', name2='Sequence2',
     
     for i in range(0, total_length, line_width):
         end = min(i + line_width, total_length)
-        chunk_colored1 = colored1[i:end]
-        chunk_colored2 = colored2[i:end]
-        chunk_match = match_line[i:end]
         chunk_raw1 = raw1[i:end]
         chunk_raw2 = raw2[i:end]
+        
+        chunk_colored1, chunk_colored2, chunk_match = _colorize_chunk(
+            chunk_raw1, chunk_raw2, use_color
+        )
         
         if show_positions:
             start_display1 = displayed_pos1 + 1
@@ -150,7 +193,6 @@ def print_alignment(result, name1='Sequence1', name2='Sequence2',
             pos_str1 = ""
             pos_str2 = ""
         
-        padding = ' ' * (max_name_len + 2)
         name_pad1 = f"{name1:<{max_name_len}}: "
         name_pad2 = f"{name2:<{max_name_len}}: "
         match_pad = f"{'':<{max_name_len}}  "
@@ -160,11 +202,18 @@ def print_alignment(result, name1='Sequence1', name2='Sequence2',
         print(f"{name_pad2}{chunk_colored2}{pos_str2}")
         print()
     
-    print("=" * (line_width + max_name_len + 15))
-    print(f"{Colors.CYAN}图例说明:{Colors.RESET}")
-    print(f"  {Colors.GREEN}|{Colors.RESET} = 匹配 (Match)")
-    print(f"  {Colors.RED}*{Colors.RESET} = 错配 (Mismatch)")
-    print(f"  {Colors.YELLOW}-{Colors.RESET} = 插入缺失 (Gap)")
+    separator_len = line_width + max_name_len + 15
+    print("=" * separator_len)
+    if use_color and supports_color():
+        print(f"{Colors.CYAN}图例说明:{Colors.RESET}")
+        print(f"  {Colors.GREEN}|{Colors.RESET} = 匹配 (Match)")
+        print(f"  {Colors.RED}*{Colors.RESET} = 错配 (Mismatch)")
+        print(f"  {Colors.YELLOW}-{Colors.RESET} = 插入缺失 (Gap)")
+    else:
+        print("图例说明:")
+        print("  | = 匹配 (Match)")
+        print("  * = 错配 (Mismatch)")
+        print("  - = 插入缺失 (Gap)")
 
 
 def print_scoring_matrix(matrix, residues, title="打分矩阵"):

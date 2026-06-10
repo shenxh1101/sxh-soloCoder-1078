@@ -17,6 +17,7 @@ from seq_align_tool import (
     print_alignment,
     export_alignment,
     batch_alignment,
+    export_batch_results,
     conservation_analysis,
     fetch_genbank,
     AlignmentResult
@@ -196,15 +197,9 @@ def main():
                   f"{result['matches']:<10}{result['aligned_length']:<10}")
         
         if args.output:
-            with open(args.output, 'w') as f:
-                f.write(f"批量比对结果 - 参考序列: {ref_name}\n")
-                f.write(f"算法: {args.algorithm} | 序列类型: {seq_type}\n")
-                f.write("="*80 + "\n\n")
-                f.write(f"{'序号':<6}{'序列名称':<30}{'得分':<12}{'相似度(%)':<12}{'匹配数':<10}{'长度':<10}\n")
-                f.write("-" * 80 + "\n")
-                for i, result in enumerate(results, 1):
-                    f.write(f"{i:<6}{result['name']:<30}{result['score']:<12.1f}{result['similarity']:<12.2f}"
-                           f"{result['matches']:<10}{result['aligned_length']:<10}\n")
+            export_batch_results(results, args.output, 
+                                reference_name=ref_name,
+                                algorithm=args.algorithm)
             print(f"\n结果已导出到: {args.output}")
         
         return

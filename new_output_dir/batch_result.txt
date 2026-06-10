@@ -1,0 +1,171 @@
+批量比对结果
+参考序列: Reference_hemoglobin
+算法: global
+================================================================================
+
+序号    序列名称                          得分          相似度(%)      匹配数       长度        
+--------------------------------------------------------------------------------
+1     Query_sequence_3              250.0       77.55       594       766       
+2     Query_sequence_2              78.0        71.04       422       594       
+3     Query_sequence_1              -741.0      25.08       149       594       
+
+================================================================================
+详细比对结果:
+================================================================================
+
+
+[1] Query_sequence_3
+--------------------------------------------------------------------------------
+得分: 250.0
+相似度: 77.55%
+匹配: 594 | 错配: 0 | Gap: 172
+比对长度: 766
+
+Ref:   ATGGTGCTGTCTCCTGCCGACAAGACCAACGTCAAGGCCGCCTGGGGTAAGGTCGGCGCG
+       ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+Query: ATGGTGCTGTCTCCTGCCGACAAGACCAACGTCAAGGCCGCCTGGGGTAAGGTCGGCGCG
+
+Ref:   CACGCTGGCGAGTATGGTGCGGAGGCCCTGGAGAGGATGTTCCTGTCCTTCCCCACCACC
+       ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+Query: CACGCTGGCGAGTATGGTGCGGAGGCCCTGGAGAGGATGTTCCTGTCCTTCCCCACCACC
+
+Ref:   AAGACCTACTTCCCGCACTTCGACCTGAGCCACGGCTCTGCCCAGGTTAAGGGCCACGGC
+       ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+Query: AAGACCTACTTCCCGCACTTCGACCTGAGCCACGGCTCTGCCCAGGTTAAGGGCCACGGC
+
+Ref:   AAGAAGGTGGCCGACGCGCTGACCAACGCGGTGAACGTGGTGGAGCA---------CG--
+       |||||||||||||||||||||||||||||||||||||||||||||||         ||  
+Query: AAGAAGGTGGCCGACGCGCTGACCAACGCGGTGAACGTGGTGGAGCACGCCCTGCGCGCC
+
+Ref:   -CCCT----G--C-G--CGC-CAC---C--C---T-GA----G-------C---G---A-
+        ||||    |  | |  ||| |||   |  |   | ||    |       |   |   | 
+Query: ACCCTGAGCGACCTGCACGCGCACAAGCTTCGGGTGGACCCGGTCAACTTCAAGGTCAAC
+
+Ref:   ---CCTG-----C---------A--C-G--CG---C-A----------------------
+          ||||     |         |  | |  ||   | |                      
+Query: CTGCCTGCCAACCTGGTGGTGGACCCTGCCCGCACCGAGCCGCGGCCTTCGCCCGCGTCG
+
+Ref:   -------------------------CA-----A-----G-C---T---T-------C-G-
+                                ||     |     | |   |   |       | | 
+Query: CCCGCTTCGCCGCCGTGGCTCCGGTCATCGGCACCCTGGCCAAGTACCTGGACAACCTGA
+
+Ref:   G-G---T----G-G-AC---C--C-----G----GTCAACTTCAAGGTCAACCTGCCTGC
+       | |   |    | | ||   |  |     |    ||||||||||||||||||||||||||
+Query: GCGACCTGCACGCGCACAAGCTGCGGGTGGACCCGTCAACTTCAAGGTCAACCTGCCTGC
+
+Ref:   CAACCTGGTGGTGGACCCTGCCCGCACCGAGCCGCGGCCTTCGCCCGCGTCGCCCGCTTC
+       ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+Query: CAACCTGGTGGTGGACCCTGCCCGCACCGAGCCGCGGCCTTCGCCCGCGTCGCCCGCTTC
+
+Ref:   GCCGCCGTGGCTCCGGTCATCGGCACCCTGGCCAAGTACCTGGACAACCTGAGCGACCTG
+       ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+Query: GCCGCCGTGGCTCCGGTCATCGGCACCCTGGCCAAGTACCTGGACAACCTGAGCGACCTG
+
+Ref:   CACGCGCACAAGCTGCGGGTGGACCCGTCAACTTCAAGGTCAACCTGCCTGCCAACCTGG
+       ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+Query: CACGCGCACAAGCTGCGGGTGGACCCGTCAACTTCAAGGTCAACCTGCCTGCCAACCTGG
+
+Ref:   TGGTGGACCCTGCCCGCACCGAGCCGCGGCCTTCGCCCGCGTCGCCCGCTTCGCCGCCGT
+       ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+Query: TGGTGGACCCTGCCCGCACCGAGCCGCGGCCTTCGCCCGCGTCGCCCGCTTCGCCGCCGT
+
+Ref:   GGCTCCGGTCATCGGCACCCTGGCCAAGTACCTGGACAACCTGAGC
+       ||||||||||||||||||||||||||||||||||||||||||||||
+Query: GGCTCCGGTCATCGGCACCCTGGCCAAGTACCTGGACAACCTGAGC
+
+
+[2] Query_sequence_2
+--------------------------------------------------------------------------------
+得分: 78.0
+相似度: 71.04%
+匹配: 422 | 错配: 0 | Gap: 172
+比对长度: 594
+
+Ref:   ATGGTGCTGTCTCCTGCCGACAAGACCAACGTCAAGGCCGCCTGGGGTAAGGTCGGCGCG
+       ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+Query: ATGGTGCTGTCTCCTGCCGACAAGACCAACGTCAAGGCCGCCTGGGGTAAGGTCGGCGCG
+
+Ref:   CACGCTGGCGAGTATGGTGCGGAGGCCCTGGAGAGGATGTTCCTGTCCTTCCCCACCACC
+       ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+Query: CACGCTGGCGAGTATGGTGCGGAGGCCCTGGAGAGGATGTTCCTGTCCTTCCCCACCACC
+
+Ref:   AAGACCTACTTCCCGCACTTCGACCTGAGCCACGGCTCTGCCCAGGTTAAGGGCCACGGC
+       ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+Query: AAGACCTACTTCCCGCACTTCGACCTGAGCCACGGCTCTGCCCAGGTTAAGGGCCACGGC
+
+Ref:   AAGAAGGTGGCCGACGCGCTGACCAACGCGGTGAACGTGGTGGAGCACGCCCTGCGCGCC
+       |||||||||||||||||||||||||||||||||||||||||||||||         ||  
+Query: AAGAAGGTGGCCGACGCGCTGACCAACGCGGTGAACGTGGTGGAGCA---------CG--
+
+Ref:   ACCCTGAGCGACCTGCACGCGCACAAGCTTCGGGTGGACCCGGTCAACTTCAAGGTCAAC
+        ||||    |  | |  ||| |||   |  |   | ||    |       |   |   | 
+Query: -CCCT----G--C-G--CGC-CAC---C--C---T-GA----G-------C---G---A-
+
+Ref:   CTGCCTGCCAACCTGGTGGTGGACCCTGCCCGCACCGAGCCGCGGCCTTCGCCCGCGTCG
+          ||||     |         |  | |  ||   | |                      
+Query: ---CCTG-----C---------A--C-G--CG---C-A----------------------
+
+Ref:   CCCGCTTCGCCGCCGTGGCTCCGGTCATCGGCACCCTGGCCAAGTACCTGGACAACCTGA
+                                ||     |     | |   |   |       | | 
+Query: -------------------------CA-----A-----G-C---T---T-------C-G-
+
+Ref:   GCGACCTGCACGCGCACAAGCTGCGGGTGGACCCGTCAACTTCAAGGTCAACCTGCCTGC
+       | |   |    | | ||   |  |     |    ||||||||||||||||||||||||||
+Query: G-G---T----G-G-AC---C--C-----G----GTCAACTTCAAGGTCAACCTGCCTGC
+
+Ref:   CAACCTGGTGGTGGACCCTGCCCGCACCGAGCCGCGGCCTTCGCCCGCGTCGCCCGCTTC
+       ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+Query: CAACCTGGTGGTGGACCCTGCCCGCACCGAGCCGCGGCCTTCGCCCGCGTCGCCCGCTTC
+
+Ref:   GCCGCCGTGGCTCCGGTCATCGGCACCCTGGCCAAGTACCTGGACAACCTGAGC
+       ||||||||||||||||||||||||||||||||||||||||||||||||||||||
+Query: GCCGCCGTGGCTCCGGTCATCGGCACCCTGGCCAAGTACCTGGACAACCTGAGC
+
+
+[3] Query_sequence_1
+--------------------------------------------------------------------------------
+得分: -741.0
+相似度: 25.08%
+匹配: 149 | 错配: 0 | Gap: 445
+比对长度: 594
+
+Ref:   ATGGTGCTGTCTCCTGCCGACAAGACCAACGTCAAGGCCGCCTGGGGTAAGGTCGGCGCG
+       |||||||||     |              | |        ||          |  || ||
+Query: ATGGTGCTG-----T--------------C-T--------CC----------T--GC-CG
+
+Ref:   CACGCTGGCGAGTATGGTGCGGAGGCCCTGGAGAGGATGTTCCTGTCCTTCCCCACCACC
+        |      | |  |       ||   ||     |  |     | |    |         |
+Query: -A------C-A--A-------GA---CC-----A--A-----C-G----T---------C
+
+Ref:   AAGACCTACTTCCCGCACTTCGACCTGAGCCACGGCTCTGCCCAGGTTAAGGGCCACGGC
+       |||           |  |  || |||        |    |    || |            
+Query: AAG-----------G--C--CG-CCT--------G----G----GG-T------------
+
+Ref:   AAGAAGGTGGCCGACGCGCTGACCAACGCGGTGAACGTGGTGGAGCACGCCCTGCGCGCC
+          |||||          | |      ||   |  |        |||||  ||  | |  
+Query: ---AAGGT----------C-G------GC---G--C--------GCACG--CT--G-G--
+
+Ref:   ACCCTGAGCGACCTGCACGCGCACAAGCTTCGGGTGGACCCGGTCAACTTCAAGGTCAAC
+          | ||  |   |           |        |      ||      |    |     
+Query: ---C-GA--G---T-----------A--------T------GG------T----G-----
+
+Ref:   CTGCCTGCCAACCTGGTGGTGGACCCTGCCCGCACCGAGCCGCGGCCTTCGCCCGCGTCG
+       | |   |   |         || ||||    |    ||                      
+Query: C-G---G---A---------GG-CCCT----G----GA----------------------
+
+Ref:   CCCGCTTCGCCGCCGTGGCTCCGGTCATCGGCACCCTGGCCAAGTACCTGGACAACCTGA
+                              |  |  || |   |      ||   |      |||  
+Query: -----------------------G--A--GG-A---T------GT---T------CCT--
+
+Ref:   GCGACCTGCACGCGCACAAGCTGCGGGTGGACCCGTCAACTTCAAGGTCAACCTGCCTGC
+         |   |         |   ||     |   |||  | |   |     | |        |
+Query: --G---T---------C---CT-----T---CCC--C-A---C-----C-A--------C
+
+Ref:   CAACCTGGTGGTGGACCCTGCCCGCACCGAGCCGCGGCCTTCGCCCGCGTCGCCCGCTTC
+       |||          || |||          |                              
+Query: CAA----------GA-CCT----------A------------------------------
+
+Ref:   GCCGCCGTGGCTCCGGTCATCGGCACCCTGGCCAAGTACCTGGACAACCTGAGC
+            | |   | |   |  | |||  ||       |  |  |   ||||||| 
+Query: -----C-T---T-C---C--C-GCA--CT-------T--C--G---ACCTGAG-
+

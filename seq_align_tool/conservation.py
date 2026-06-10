@@ -11,24 +11,69 @@ from .scoring import ScoringMatrix
 
 def _align_multiple_sequences(sequences: List[Tuple[str, str]]) -> List[Tuple[str, str]]:
     """
-    简单的多序列比对（使用渐进式比对策略）
-    先将所有序列与第一个序列进行两两比对，然后构建多序列比对
+    渐进式多序列比对
+    确保所有序列（包括master）对齐到同一组列，gap位置正确对齐
     """
     if len(sequences) < 2:
         return sequences
     
-    aligned_sequences = []
-    master_name, master_seq = sequences[0]
-    aligned_sequences.append((master_name, master_seq))
+    seq_type = _detect_seq_type(sequences[0][1])
+    scoring = ScoringMatrix(seq_type=seq_type, match=2, mismatch=-1, gap=-2)
     
-    scoring = ScoringMatrix(seq_type='dna' if _detect_seq_type(master_seq) == 'dna' else 'protein',
-                           match=2, mismatch=-1, gap=-2)
+    aligned = [(sequences[0][0], sequences[0][1])]
     
     for name, seq in sequences[1:]:
-        result = needleman_wunsch(master_seq, seq, scoring)
-        aligned_sequences.append((name, result.seq2_aligned))
+        current_master = aligned[0][1]
+        result = needleman_wunsch(current_master, seq, scoring)
+        
+        aligned_master = result.seq1_aligned
+        aligned_seq = result.seq2_aligned
+        
+        if len(aligned_master) != len(aligned[0][1]):
+            aligned = _realign_all_sequences(aligned, aligned_master, result)
+        
+        aligned.append((name, aligned_seq))
     
-    return aligned_sequences
+    max_len = max(len(seq) for _, seq in aligned)
+    aligned = [(name, seq.ljust(max_len, '-')) for name, seq in aligned]
+    
+    return aligned
+
+
+def _realign_all_sequences(aligned, new_master, result):
+    """
+    当master序列因新gap插入而长度变化时，重新对齐所有已有序列
+    """
+    old_master = aligned[0][1]
+    new_master = result.seq1_aligned
+    
+    mapping = []
+    old_idx = 0
+    for c in new_master:
+        if c == '-':
+            mapping.append(None)
+        else:
+            mapping.append(old_idx)
+            old_idx += 1
+    
+    new_aligned = []
+    for name, seq in aligned:
+        new_seq = []
+        seq_idx = 0
+        for pos in mapping:
+            if pos is None:
+                new_seq.append('-')
+            else:
+                if seq_idx < len(seq):
+                    new_seq.append(seq[seq_idx])
+                    seq_idx += 1
+                else:
+                    new_seq.append('-')
+        new_aligned.append((name, ''.join(new_seq)))
+    
+    new_aligned[0] = (aligned[0][0], new_master)
+    
+    return new_aligned
 
 
 def _detect_seq_type(seq: str) -> str:
@@ -43,6 +88,7 @@ def _detect_seq_type(seq: str) -> str:
 def calculate_conservation(aligned_sequences: List[Tuple[str, str]]) -> Dict:
     """
     计算多序列比对每个位置的保守度
+    所有位置（包括gap列）都计入统计
     
     Args:
         aligned_sequences: 比对后的序列列表，每个元素为 (name, aligned_seq) 元组
@@ -53,40 +99,43 @@ def calculate_conservation(aligned_sequences: List[Tuple[str, str]]) -> Dict:
     if len(aligned_sequences) < 2:
         raise ValueError("保守性分析需要至少2个序列")
     
-    align_length = len(aligned_sequences[0][1])
+    max_len = max(len(seq) for _, seq in aligned_sequences)
     num_sequences = len(aligned_sequences)
+    
+    aligned_padded = []
+    for name, seq in aligned_sequences:
+        padded = seq.ljust(max_len, '-')
+        aligned_padded.append((name, padded))
     
     conservation_scores = []
     conservation_levels = []
+    gap_counts = []
     
-    for pos in range(align_length):
+    for pos in range(max_len):
         residues = []
-        for _, seq in aligned_sequences:
-            if pos < len(seq):
-                residues.append(seq[pos])
+        for _, seq in aligned_padded:
+            residues.append(seq[pos])
         
         count = Counter(residues)
-        
-        if '-' in count:
-            gap_count = count['-']
-            if gap_count == num_sequences:
-                conservation_scores.append(0.0)
-                conservation_levels.append('gap')
-                continue
+        gap_count = count.get('-', 0)
+        gap_counts.append(gap_count)
         
         non_gap_residues = [r for r in residues if r != '-']
         
-        if not non_gap_residues:
+        if gap_count == num_sequences:
             conservation_scores.append(0.0)
-            conservation_levels.append('gap')
+            conservation_levels.append('all_gap')
             continue
         
-        most_common, most_common_count = count.most_common(1)[0]
+        if not non_gap_residues:
+            conservation_scores.append(0.0)
+            conservation_levels.append('all_gap')
+            continue
         
-        if most_common == '-':
-            most_common, most_common_count = count.most_common(2)[1] if len(count) > 1 else (None, 0)
+        non_gap_count = Counter(non_gap_residues)
+        most_common_residue, most_common_count = non_gap_count.most_common(1)[0]
         
-        conservation = (most_common_count / len(non_gap_residues)) * 100 if len(non_gap_residues) > 0 else 0
+        conservation = (most_common_count / len(non_gap_residues)) * 100
         conservation_scores.append(conservation)
         
         if conservation == 100:
@@ -98,17 +147,22 @@ def calculate_conservation(aligned_sequences: List[Tuple[str, str]]) -> Dict:
         else:
             conservation_levels.append('low')
     
-    avg_conservation = sum(conservation_scores) / len(conservation_scores) if conservation_scores else 0
+    valid_scores = [s for s, l in zip(conservation_scores, conservation_levels) if l != 'all_gap']
+    avg_conservation = sum(valid_scores) / len(valid_scores) if valid_scores else 0
     conserved_sites = sum(1 for s in conservation_scores if s == 100)
+    all_gap_sites = sum(1 for l in conservation_levels if l == 'all_gap')
     
     return {
-        'positions': list(range(1, align_length + 1)),
+        'positions': list(range(1, max_len + 1)),
         'conservation_scores': conservation_scores,
         'conservation_levels': conservation_levels,
+        'gap_counts': gap_counts,
         'avg_conservation': avg_conservation,
         'conserved_sites': conserved_sites,
-        'total_sites': align_length,
-        'num_sequences': num_sequences
+        'all_gap_sites': all_gap_sites,
+        'total_sites': max_len,
+        'num_sequences': num_sequences,
+        'aligned_sequences': aligned_padded
     }
 
 
@@ -221,10 +275,20 @@ def print_conservation_result(result: Dict) -> None:
     print("多序列保守性分析结果")
     print("="*70)
     print(f"\n序列数量: {result['num_sequences']}")
-    print(f"比对长度: {result['total_sites']} 个位置")
-    print(f"平均保守度: {result['avg_conservation']:.2f}%")
+    print(f"比对总长度: {result['total_sites']} 个位置")
     print(f"完全保守位点: {result['conserved_sites']} / {result['total_sites']} "
           f"({result['conserved_sites']/result['total_sites']*100:.1f}%)")
+    print(f"全gap位点: {result['all_gap_sites']} / {result['total_sites']}")
+    print(f"有效保守位点（排除全gap）: {result['total_sites'] - result['all_gap_sites']}")
+    print(f"平均保守度（仅有效位点）: {result['avg_conservation']:.2f}%")
+    
+    if 'aligned_sequences' in result:
+        print(f"\n多序列比对结果（前60个碱基）:")
+        print("-" * 70)
+        for name, seq in result['aligned_sequences']:
+            display_seq = seq[:60] + ('...' if len(seq) > 60 else '')
+            print(f"{name[:25]:<25}: {display_seq}")
+    
     print(f"\n保守度曲线图:")
     print("-" * 70)
     print(result['ascii_plot'])

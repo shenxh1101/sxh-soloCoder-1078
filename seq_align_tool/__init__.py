@@ -14,7 +14,7 @@ from .visualization import (
     print_alignment
 )
 from .export import export_alignment
-from .batch import batch_alignment
+from .batch import batch_alignment, export_batch_results
 from .conservation import conservation_analysis
 from .genbank import fetch_genbank
 
@@ -29,6 +29,7 @@ __all__ = [
     'print_alignment',
     'export_alignment',
     'batch_alignment',
+    'export_batch_results',
     'conservation_analysis',
     'fetch_genbank'
 ]

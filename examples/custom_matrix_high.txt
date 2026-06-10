@@ -1,0 +1,6 @@
+# Custom DNA scoring matrix - High match score
+A T C G
+A 5 -2 -2 -2
+T -2 5 -2 -2
+C -2 -2 5 -2
+G -2 -2 -2 5

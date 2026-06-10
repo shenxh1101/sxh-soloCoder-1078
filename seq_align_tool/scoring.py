@@ -307,7 +307,7 @@ class ScoringMatrix:
         self.matrix_name = matrix_name
         self.matrix = None
         
-        if seq_type == 'protein' or matrix_name:
+        if seq_type == 'protein' or matrix_name or matrix_file:
             if matrix_file:
                 self._load_custom_matrix(matrix_file)
             elif matrix_name:
@@ -323,7 +323,13 @@ class ScoringMatrix:
     def _load_custom_matrix(self, matrix_file):
         """
         从文件加载自定义打分矩阵
-        格式: 第一行是氨基酸/碱基列表，后续行是对称矩阵
+        格式: 
+        # 注释行
+        A T C G
+        A 5 -2 -2 -2
+        T -2 5 -2 -2
+        C -2 -2 5 -2
+        G -2 -2 -2 5
         """
         try:
             with open(matrix_file, 'r', encoding='utf-8') as f:
@@ -336,13 +342,20 @@ class ScoringMatrix:
             n = len(residues)
             self.matrix = {}
             
-            for i, residue in enumerate(residues):
+            for i in range(n):
+                parts = lines[i + 1].split()
+                if len(parts) != n + 1:
+                    raise ValueError(f"矩阵第{i+2}行格式错误，应有{n+1}个元素")
+                residue = parts[0]
+                values = parts[1:]
+                if residue not in residues:
+                    raise ValueError(f"未知的残基: {residue}")
                 self.matrix[residue] = {}
-                values = lines[i + 1].split()
                 for j, value in enumerate(values):
                     self.matrix[residue][residues[j]] = int(value)
             
             self.matrix_name = os.path.basename(matrix_file)
+            print(f"成功加载自定义矩阵: {self.matrix_name}")
         except Exception as e:
             print(f"加载自定义矩阵文件时出错: {e}")
             self.matrix = BLOSUM62
