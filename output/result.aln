@@ -1,0 +1,43 @@
+CLUSTAL O(1.2.4) multiple sequence alignment
+
+
+Homo_sapiens_hemoglobin_alpha  ATGGTGCTGTCTCCTGCCGACAAGACCAACGTCAAGGCCGCCTGGGGTAAGGTCGGCGCG 60
+Pan_troglodytes_hemoglobin_alp ATGGTGCTGTCTCCTGCCGACAAGACCAACGTCAAGGCCGCCTGGGGTAAGGTCGGCGCG 60
+                               ************************************************************
+
+Homo_sapiens_hemoglobin_alpha  CACGCTGGCGAGTATGGTGCGGAGGCCCTGGAGAGGATGTTCCTGTCCTTCCCCACCACC 120
+Pan_troglodytes_hemoglobin_alp CACGCTGGCGAGTATGGTGCGGAGGCCCTGGAGAGGATGTTCCTGTCCTTCCCCACCACC 120
+                               ************************************************************
+
+Homo_sapiens_hemoglobin_alpha  AAGACCTACTTCCCGCACTTCGACCTGAGCCACGGCTCTGCCCAGGTTAAGGGCCACGGC 180
+Pan_troglodytes_hemoglobin_alp AAGACCTACTTCCCGCACTTCGACCTGAGCCACGGCTCTGCCCAGGTTAAGGGCCACGGC 180
+                               ************************************************************
+
+Homo_sapiens_hemoglobin_alpha  AAGAAGGTGGCCGACGCGCTGACCAACGCGGTGAACGTGGTGGAGCACGCCCTGCGCGCC 240
+Pan_troglodytes_hemoglobin_alp AAGAAGGTGGCCGACGCGCTGACCAACGCGGTGAACGTGGTGGAGCACGCCCTGCGCGCC 240
+                               ************************************************************
+
+Homo_sapiens_hemoglobin_alpha  ACCCTGAGCGACCTGCACGCGCACAAGCTTCGGGTGGACCCGGTCAACTTCAAGGTCAAC 300
+Pan_troglodytes_hemoglobin_alp ACCCTGAGCGACCTGCACGCGCACAAGCTTCGGGTGGACCCGGTCAACTTCAAGGTCAAC 300
+                               ************************************************************
+
+Homo_sapiens_hemoglobin_alpha  CTGCCTGCCAACCTGGTGGTGGACCCTGCCCGCACCGAGCCGCGGCCTTCGCCCGCGTCG 360
+Pan_troglodytes_hemoglobin_alp CTGCCTGCCAACCTGGTGGTGGACCCTGCCCGCACCGAGCCGCGGCCTTCGCCCGCGTCG 360
+                               ************************************************************
+
+Homo_sapiens_hemoglobin_alpha  CCCGCTTCGCCGCCGTGGCTCCGGTCATCGGCACCCTGGCCAAGTACCTGGACAACCTGA 420
+Pan_troglodytes_hemoglobin_alp CCCGCTTCGCCGCCGTGGCTCCGGTCATCGGCACCCTGGCCAAGTACCTGGACAACCTGA 420
+                               ************************************************************
+
+Homo_sapiens_hemoglobin_alpha  GCGACCTGCACGCGCACAAGCTGCGGGTGGACCCGTCAACTTCAAGGTCAACCTGCCTGC 480
+Pan_troglodytes_hemoglobin_alp GCGACCTGCACGCGCACAAGCTGCGGGTGGACCCGTCAACTTCAAGGTCAACCTGCCTGC 480
+                               ************************************************************
+
+Homo_sapiens_hemoglobin_alpha  CAACCTGGTGGTGGACCCTGCCCGCACCGAGCCGCGGCCTTCGCCCGCGTCGCCCGCTTC 540
+Pan_troglodytes_hemoglobin_alp CAACCTGGTGGTGGACCCTGCCCGCACCGAGCCGCGGCCTTCGCCCGCGTCGCCCGCTTC 540
+                               ************************************************************
+
+Homo_sapiens_hemoglobin_alpha  GCCGCCGTGGCTCCGGTCATCGGCACCCTGGCCAAGTACCTGGACAACCTGAGC 594
+Pan_troglodytes_hemoglobin_alp GCCGCCGTGGCTCCGGTCATCGGCACCCTGGCCAAGTACTTGGACAACCTGAGC 594
+                               ***************************************.**************
+

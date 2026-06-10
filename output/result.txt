@@ -1,0 +1,57 @@
+序列比对结果
+======================================================================
+
+序列1: Homo_sapiens_hemoglobin_alpha
+序列2: Pan_troglodytes_hemoglobin_alpha
+
+比对得分: 592.0
+相似度: 99.83%
+匹配数: 593 / 594
+错配数: 1
+Gap数: 0
+
+比对详情:
+----------------------------------------------------------------------
+
+Homo_sapiens_hemoglobin_alpha   : ATGGTGCTGTCTCCTGCCGACAAGACCAACGTCAAGGCCGCCTGGGGTAAGGTCGGCGCG
+                                  ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+Pan_troglodytes_hemoglobin_alpha: ATGGTGCTGTCTCCTGCCGACAAGACCAACGTCAAGGCCGCCTGGGGTAAGGTCGGCGCG
+
+Homo_sapiens_hemoglobin_alpha   : CACGCTGGCGAGTATGGTGCGGAGGCCCTGGAGAGGATGTTCCTGTCCTTCCCCACCACC
+                                  ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+Pan_troglodytes_hemoglobin_alpha: CACGCTGGCGAGTATGGTGCGGAGGCCCTGGAGAGGATGTTCCTGTCCTTCCCCACCACC
+
+Homo_sapiens_hemoglobin_alpha   : AAGACCTACTTCCCGCACTTCGACCTGAGCCACGGCTCTGCCCAGGTTAAGGGCCACGGC
+                                  ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+Pan_troglodytes_hemoglobin_alpha: AAGACCTACTTCCCGCACTTCGACCTGAGCCACGGCTCTGCCCAGGTTAAGGGCCACGGC
+
+Homo_sapiens_hemoglobin_alpha   : AAGAAGGTGGCCGACGCGCTGACCAACGCGGTGAACGTGGTGGAGCACGCCCTGCGCGCC
+                                  ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+Pan_troglodytes_hemoglobin_alpha: AAGAAGGTGGCCGACGCGCTGACCAACGCGGTGAACGTGGTGGAGCACGCCCTGCGCGCC
+
+Homo_sapiens_hemoglobin_alpha   : ACCCTGAGCGACCTGCACGCGCACAAGCTTCGGGTGGACCCGGTCAACTTCAAGGTCAAC
+                                  ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+Pan_troglodytes_hemoglobin_alpha: ACCCTGAGCGACCTGCACGCGCACAAGCTTCGGGTGGACCCGGTCAACTTCAAGGTCAAC
+
+Homo_sapiens_hemoglobin_alpha   : CTGCCTGCCAACCTGGTGGTGGACCCTGCCCGCACCGAGCCGCGGCCTTCGCCCGCGTCG
+                                  ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+Pan_troglodytes_hemoglobin_alpha: CTGCCTGCCAACCTGGTGGTGGACCCTGCCCGCACCGAGCCGCGGCCTTCGCCCGCGTCG
+
+Homo_sapiens_hemoglobin_alpha   : CCCGCTTCGCCGCCGTGGCTCCGGTCATCGGCACCCTGGCCAAGTACCTGGACAACCTGA
+                                  ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+Pan_troglodytes_hemoglobin_alpha: CCCGCTTCGCCGCCGTGGCTCCGGTCATCGGCACCCTGGCCAAGTACCTGGACAACCTGA
+
+Homo_sapiens_hemoglobin_alpha   : GCGACCTGCACGCGCACAAGCTGCGGGTGGACCCGTCAACTTCAAGGTCAACCTGCCTGC
+                                  ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+Pan_troglodytes_hemoglobin_alpha: GCGACCTGCACGCGCACAAGCTGCGGGTGGACCCGTCAACTTCAAGGTCAACCTGCCTGC
+
+Homo_sapiens_hemoglobin_alpha   : CAACCTGGTGGTGGACCCTGCCCGCACCGAGCCGCGGCCTTCGCCCGCGTCGCCCGCTTC
+                                  ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+Pan_troglodytes_hemoglobin_alpha: CAACCTGGTGGTGGACCCTGCCCGCACCGAGCCGCGGCCTTCGCCCGCGTCGCCCGCTTC
+
+Homo_sapiens_hemoglobin_alpha   : GCCGCCGTGGCTCCGGTCATCGGCACCCTGGCCAAGTACCTGGACAACCTGAGC
+                                  |||||||||||||||||||||||||||||||||||||||*||||||||||||||
+Pan_troglodytes_hemoglobin_alpha: GCCGCCGTGGCTCCGGTCATCGGCACCCTGGCCAAGTACTTGGACAACCTGAGC
+
+======================================================================
+图例: | = 匹配, * = 错配, 空格 = Gap
