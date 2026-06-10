@@ -1,0 +1,43 @@
+# 多序列保守性分析详细结果
+# 序列数量: 4
+# 比对总长度: 34 个位置
+# 平均保守度: 99.26%
+# 完全保守位点: 33 / 34
+# 全gap位点: 0 / 34
+# 导出格式: TSV
+
+位置	保守度(%)	保守级别	Gap数	最常见残基	频率	残基分布	seq_a	seq_b_with_insertion	seq_c_with_deletion	seq_d_mutated
+1	100.0	conserved	0	A	4/4	"A:4"	"A"	"A"	"A"	"A"
+2	100.0	conserved	0	T	4/4	"T:4"	"T"	"T"	"T"	"T"
+3	100.0	conserved	0	G	4/4	"G:4"	"G"	"G"	"G"	"G"
+4	100.0	conserved	0	C	4/4	"C:4"	"C"	"C"	"C"	"C"
+5	100.0	conserved	0	G	4/4	"G:4"	"G"	"G"	"G"	"G"
+6	100.0	conserved	0	T	4/4	"T:4"	"T"	"T"	"T"	"T"
+7	100.0	conserved	1	A	3/3	"A:3"	"A"	"A"	"-"	"A"
+8	100.0	conserved	1	C	3/3	"C:3"	"C"	"C"	"-"	"C"
+9	100.0	conserved	1	G	3/3	"G:3"	"G"	"G"	"-"	"G"
+10	100.0	conserved	0	A	4/4	"A:4"	"A"	"A"	"A"	"A"
+11	100.0	conserved	1	T	3/3	"T:3"	"T"	"T"	"-"	"T"
+12	100.0	conserved	0	C	4/4	"C:4"	"C"	"C"	"C"	"C"
+13	100.0	conserved	0	G	4/4	"G:4"	"G"	"G"	"G"	"G"
+14	75.0	moderate	0	A	3/4	"A:3;G:1"	"A"	"A"	"A"	"G"
+15	100.0	conserved	0	T	4/4	"T:4"	"T"	"T"	"T"	"T"
+16	100.0	conserved	0	C	4/4	"C:4"	"C"	"C"	"C"	"C"
+17	100.0	conserved	0	G	4/4	"G:4"	"G"	"G"	"G"	"G"
+18	100.0	conserved	3	A	1/1	"A:1"	"-"	"A"	"-"	"-"
+19	100.0	conserved	0	A	4/4	"A:4"	"A"	"A"	"A"	"A"
+20	100.0	conserved	0	T	4/4	"T:4"	"T"	"T"	"T"	"T"
+21	100.0	conserved	0	C	4/4	"C:4"	"C"	"C"	"C"	"C"
+22	100.0	conserved	0	G	4/4	"G:4"	"G"	"G"	"G"	"G"
+23	100.0	conserved	0	A	4/4	"A:4"	"A"	"A"	"A"	"A"
+24	100.0	conserved	0	T	4/4	"T:4"	"T"	"T"	"T"	"T"
+25	100.0	conserved	0	C	4/4	"C:4"	"C"	"C"	"C"	"C"
+26	100.0	conserved	0	G	4/4	"G:4"	"G"	"G"	"G"	"G"
+27	100.0	conserved	0	A	4/4	"A:4"	"A"	"A"	"A"	"A"
+28	100.0	conserved	0	T	4/4	"T:4"	"T"	"T"	"T"	"T"
+29	100.0	conserved	0	C	4/4	"C:4"	"C"	"C"	"C"	"C"
+30	100.0	conserved	0	G	4/4	"G:4"	"G"	"G"	"G"	"G"
+31	100.0	conserved	0	A	4/4	"A:4"	"A"	"A"	"A"	"A"
+32	100.0	conserved	0	T	4/4	"T:4"	"T"	"T"	"T"	"T"
+33	100.0	conserved	0	C	4/4	"C:4"	"C"	"C"	"C"	"C"
+34	100.0	conserved	0	G	4/4	"G:4"	"G"	"G"	"G"	"G"

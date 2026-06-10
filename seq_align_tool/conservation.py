@@ -293,3 +293,140 @@ def print_conservation_result(result: Dict) -> None:
     print("-" * 70)
     print(result['ascii_plot'])
     print("=" * 70)
+
+
+def export_conservation_details(result: Dict, output_path: str, fmt: str = 'csv') -> None:
+    """
+    导出保守性分析的详细结果，包括每个位置的信息
+    
+    Args:
+        result: conservation_analysis返回的结果字典
+        output_path: 输出文件路径
+        fmt: 导出格式 ('csv', 'tsv', 'txt')
+    """
+    import os
+    
+    directory = os.path.dirname(output_path)
+    if directory and not os.path.exists(directory):
+        os.makedirs(directory)
+    
+    if fmt == 'csv':
+        delimiter = ','
+        encoding = 'utf-8-sig'
+    elif fmt == 'tsv':
+        delimiter = '\t'
+        encoding = 'utf-8'
+    else:
+        _export_conservation_txt(result, output_path)
+        return
+    
+    with open(output_path, 'w', encoding=encoding) as f:
+        f.write(f"# 多序列保守性分析详细结果\n")
+        f.write(f"# 序列数量: {result['num_sequences']}\n")
+        f.write(f"# 比对总长度: {result['total_sites']} 个位置\n")
+        f.write(f"# 平均保守度: {result['avg_conservation']:.2f}%\n")
+        f.write(f"# 完全保守位点: {result['conserved_sites']} / {result['total_sites']}\n")
+        f.write(f"# 全gap位点: {result['all_gap_sites']} / {result['total_sites']}\n")
+        f.write(f"# 导出格式: {fmt.upper()}\n\n")
+        
+        seq_names = [name for name, _ in result['aligned_sequences']]
+        
+        headers = ['位置', '保守度(%)', '保守级别', 'Gap数', '最常见残基', '频率', '残基分布'] + seq_names
+        f.write(delimiter.join(headers) + '\n')
+        
+        for i in range(result['total_sites']):
+            pos = result['positions'][i]
+            score = result['conservation_scores'][i]
+            level = result['conservation_levels'][i]
+            gap_count = result['gap_counts'][i]
+            
+            residues = [seq[i] for _, seq in result['aligned_sequences']]
+            non_gap = [r for r in residues if r != '-']
+            
+            if non_gap:
+                from collections import Counter
+                residue_counts = Counter(non_gap)
+                most_common_res, most_common_count = residue_counts.most_common(1)[0]
+                distribution = ';'.join([f"{r}:{c}" for r, c in sorted(residue_counts.items())])
+            else:
+                most_common_res = '-'
+                most_common_count = 0
+                distribution = '-'
+            
+            freq = f"{most_common_count}/{len(non_gap)}" if non_gap else '-'
+            
+            row = [
+                str(pos),
+                f"{score:.1f}",
+                level,
+                str(gap_count),
+                most_common_res,
+                freq,
+                f'"{distribution}"'
+            ] + [f'"{r}"' for r in residues]
+            
+            f.write(delimiter.join(row) + '\n')
+    
+    print(f"保守性分析详细结果已导出为 {fmt.upper()} 格式: {output_path}")
+
+
+def _export_conservation_txt(result: Dict, output_path: str) -> None:
+    """
+    导出保守性分析详细结果为文本格式
+    """
+    with open(output_path, 'w', encoding='utf-8') as f:
+        f.write("=" * 80 + "\n")
+        f.write("多序列保守性分析详细结果\n")
+        f.write("=" * 80 + "\n\n")
+        
+        f.write(f"序列数量: {result['num_sequences']}\n")
+        f.write(f"比对总长度: {result['total_sites']} 个位置\n")
+        f.write(f"平均保守度: {result['avg_conservation']:.2f}%\n")
+        f.write(f"完全保守位点: {result['conserved_sites']} / {result['total_sites']}\n")
+        f.write(f"全gap位点: {result['all_gap_sites']} / {result['total_sites']}\n\n")
+        
+        seq_names = [name for name, _ in result['aligned_sequences']]
+        f.write("序列列表:\n")
+        for i, name in enumerate(seq_names, 1):
+            f.write(f"  {i}. {name}\n")
+        
+        f.write("\n" + "=" * 80 + "\n")
+        f.write("每个位置的详细信息:\n")
+        f.write("=" * 80 + "\n\n")
+        
+        header = f"{'位置':<8}{'保守度':<10}{'级别':<12}{'Gap数':<8}{'残基分布':<30}"
+        for name in seq_names:
+            header += f"{name[:10]:<12}"
+        f.write(header + "\n")
+        f.write("-" * (8 + 10 + 12 + 8 + 30 + len(seq_names) * 12) + "\n")
+        
+        for i in range(result['total_sites']):
+            pos = result['positions'][i]
+            score = result['conservation_scores'][i]
+            level = result['conservation_levels'][i]
+            gap_count = result['gap_counts'][i]
+            
+            residues = [seq[i] for _, seq in result['aligned_sequences']]
+            non_gap = [r for r in residues if r != '-']
+            
+            if non_gap:
+                from collections import Counter
+                residue_counts = Counter(non_gap)
+                distribution = ' '.join([f"{r}:{c}" for r, c in sorted(residue_counts.items())])
+            else:
+                distribution = '-'
+            
+            line = f"{pos:<8}{score:<10.1f}{level:<12}{gap_count:<8}{distribution:<30}"
+            for r in residues:
+                line += f"{r:<12}"
+            f.write(line + "\n")
+        
+        f.write("\n" + "=" * 80 + "\n")
+        f.write("保守度级别说明:\n")
+        f.write("  conserved: 100% 完全保守\n")
+        f.write("  high: >=80% 高度保守\n")
+        f.write("  moderate: >=50% 中度保守\n")
+        f.write("  low: <50% 低保守性\n")
+        f.write("  all_gap: 全部为gap\n")
+    
+    print(f"保守性分析详细结果已导出为 TXT 格式: {output_path}")

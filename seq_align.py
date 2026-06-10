@@ -19,9 +19,14 @@ from seq_align_tool import (
     batch_alignment,
     export_batch_results,
     conservation_analysis,
+    print_conservation_result,
+    export_conservation_details,
     fetch_genbank,
+    reverse_complement,
+    align_with_reverse_complement,
     AlignmentResult
 )
+from seq_align_tool.genbank import clear_cache, list_cache
 
 
 def parse_args():
@@ -73,17 +78,29 @@ def parse_args():
     align_group.add_argument('--matrix-file', help='自定义打分矩阵文件')
     align_group.add_argument('--seq-type', choices=['dna', 'protein', 'auto'], default='auto',
                            help='序列类型 (默认: auto自动检测)')
+    align_group.add_argument('--reverse-complement', action='store_true',
+                            help='DNA序列自动比较原序列和反向互补序列，选择最佳方向')
     
     output_group = parser.add_argument_group('输出选项')
     output_group.add_argument('-o', '--output', help='输出文件路径')
     output_group.add_argument('--format', choices=['txt', 'aln'], default='txt',
-                             help='输出格式 (默认: txt)')
+                             help='双序列比对输出格式 (默认: txt)')
+    output_group.add_argument('--batch-format', choices=['txt', 'csv', 'tsv'], default='txt',
+                             help='批量比对输出格式 (默认: txt)')
     output_group.add_argument('--no-color', action='store_true', help='禁用彩色输出')
     output_group.add_argument('--line-width', type=int, default=60, help='输出行宽 (默认: 60)')
     
     analysis_group = parser.add_argument_group('分析选项')
     analysis_group.add_argument('--conservation', action='store_true', help='进行保守性分析')
     analysis_group.add_argument('--plot-width', type=int, default=80, help='保守性曲线图宽度 (默认: 80)')
+    analysis_group.add_argument('--conservation-export', help='保守性分析详细结果导出路径')
+    analysis_group.add_argument('--conservation-format', choices=['txt', 'csv', 'tsv'], default='csv',
+                               help='保守性分析详细结果格式 (默认: csv)')
+    
+    cache_group = parser.add_argument_group('缓存选项')
+    cache_group.add_argument('--no-cache', action='store_true', help='禁用GenBank本地缓存')
+    cache_group.add_argument('--clear-cache', action='store_true', help='清理GenBank本地缓存后退出')
+    cache_group.add_argument('--list-cache', action='store_true', help='列出所有缓存的GenBank序列后退出')
     
     return parser.parse_args()
 
@@ -98,17 +115,18 @@ def detect_seq_type(seq):
 
 def get_sequences(args):
     seq1, seq2, name1, name2 = None, None, None, None
+    use_cache = not args.no_cache
     
     if args.genbank:
         print(f"正在从GenBank获取 {args.genbank}...", file=sys.stderr)
-        name1, seq1 = fetch_genbank(args.genbank)
+        name1, seq1 = fetch_genbank(args.genbank, use_cache=use_cache)
         if not seq1:
             print(f"错误: 无法获取GenBank序列 {args.genbank}", file=sys.stderr)
             sys.exit(1)
     
     if args.genbank2:
         print(f"正在从GenBank获取 {args.genbank2}...", file=sys.stderr)
-        name2, seq2 = fetch_genbank(args.genbank2)
+        name2, seq2 = fetch_genbank(args.genbank2, use_cache=use_cache)
         if not seq2:
             print(f"错误: 无法获取GenBank序列 {args.genbank2}", file=sys.stderr)
             sys.exit(1)
@@ -128,6 +146,24 @@ def get_sequences(args):
 
 def main():
     args = parse_args()
+    
+    if args.clear_cache:
+        print("正在清理GenBank本地缓存...", file=sys.stderr)
+        count = clear_cache()
+        print(f"已清理 {count} 个缓存文件", file=sys.stderr)
+        return
+    
+    if args.list_cache:
+        cached = list_cache()
+        if not cached:
+            print("当前没有缓存的序列", file=sys.stderr)
+        else:
+            print(f"共有 {len(cached)} 个缓存的序列:")
+            print(f"{'Accession':<20}{'数据库':<10}{'名称':<30}{'缓存时间':<20}")
+            print("-" * 80)
+            for item in cached:
+                print(f"{item['accession']:<20}{item['db']:<10}{item['name']:<30}{item['cached_at']:<20}")
+        return
     
     if args.msa and args.conservation:
         if len(args.msa) < 2:
@@ -149,10 +185,12 @@ def main():
         print("="*60)
         
         result = conservation_analysis(sequences, plot_width=args.plot_width)
-        print(f"\n平均保守度: {result['avg_conservation']:.2f}%")
-        print(f"保守位点数量: {result['conserved_sites']}/{result['total_sites']}")
-        print("\n保守度曲线图:")
-        print(result['ascii_plot'])
+        print_conservation_result(result)
+        
+        if args.conservation_export:
+            export_conservation_details(result, args.conservation_export, 
+                                       fmt=args.conservation_format)
+            print(f"\n保守性分析详细结果已导出到: {args.conservation_export}")
         return
     
     if args.dir and args.ref:
@@ -189,18 +227,19 @@ def main():
         align_func = needleman_wunsch if args.algorithm == 'global' else smith_waterman
         results = batch_alignment(ref_seq, query_seqs, align_func, scoring)
         
-        print(f"\n{'序号':<6}{'序列名称':<30}{'得分':<12}{'相似度(%)':<12}{'匹配数':<10}{'长度':<10}")
-        print("-" * 80)
+        print(f"\n{'序号':<6}{'序列名称':<30}{'长度':<10}{'得分':<12}{'相似度(%)':<12}{'匹配数':<10}{'Gap数':<10}")
+        print("-" * 100)
         
         for i, result in enumerate(results, 1):
-            print(f"{i:<6}{result['name']:<30}{result['score']:<12.1f}{result['similarity']:<12.2f}"
-                  f"{result['matches']:<10}{result['aligned_length']:<10}")
+            print(f"{i:<6}{result['name']:<30}{result['query_length']:<10}{result['score']:<12.1f}"
+                  f"{result['similarity']:<12.2f}{result['matches']:<10}{result['gaps']:<10}")
         
         if args.output:
             export_batch_results(results, args.output, 
                                 reference_name=ref_name,
-                                algorithm=args.algorithm)
-            print(f"\n结果已导出到: {args.output}")
+                                algorithm=args.algorithm,
+                                fmt=args.batch_format)
+            print(f"\n结果已导出到: {args.output} (格式: {args.batch_format.upper()})")
         
         return
     
@@ -242,13 +281,36 @@ def main():
     print("-"*70)
     
     align_func = needleman_wunsch if args.algorithm == 'global' else smith_waterman
-    result = align_func(seq1, seq2, scoring)
+    
+    if args.reverse_complement:
+        if seq_type != 'dna':
+            print("警告: --reverse-complement 仅适用于DNA序列，将忽略此选项", file=sys.stderr)
+            result = align_func(seq1, seq2, scoring)
+            direction_info = ""
+        else:
+            print("\n正在比较正向和反向互补序列，选择最佳方向...", file=sys.stderr)
+            rc_result = align_with_reverse_complement(seq1, seq2, scoring, algorithm=args.algorithm)
+            result = rc_result['result']
+            direction = rc_result['direction']
+            forward_score = rc_result['forward_score']
+            reverse_score = rc_result['reverse_score']
+            
+            if direction == 'reverse_complement':
+                direction_info = f"\n方向: 使用序列2的反向互补 (正向得分: {forward_score:.1f}, 反向互补得分: {reverse_score:.1f})"
+                name2 = f"{name2} (反向互补)"
+            else:
+                direction_info = f"\n方向: 使用原序列 (正向得分: {forward_score:.1f}, 反向互补得分: {reverse_score:.1f})"
+    else:
+        result = align_func(seq1, seq2, scoring)
+        direction_info = ""
     
     print(f"\n比对得分: {result.score:.1f}")
     print(f"相似度: {result.similarity:.2f}%")
     print(f"匹配数: {result.matches} / {result.aligned_length}")
     print(f"错配数: {result.mismatches}")
     print(f"Gap数: {result.gaps}")
+    if direction_info:
+        print(direction_info)
     print("\n比对结果:")
     print("-"*70)
     

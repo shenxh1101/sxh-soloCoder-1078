@@ -37,6 +37,7 @@ def batch_alignment(reference_seq: str, query_sequences: List[tuple],
         results.append({
             'name': name,
             'sequence': seq,
+            'query_length': len(seq),
             'result': result,
             'score': result.score,
             'similarity': result.similarity,
@@ -78,7 +79,8 @@ def generate_summary_table(results: List[Dict]) -> str:
 
 def export_batch_results(results: List[Dict], output_path: str, 
                          reference_name: str = "Reference",
-                         algorithm: str = "global") -> None:
+                         algorithm: str = "global",
+                         fmt: str = "txt") -> None:
     """
     导出批量比对结果到文件
     
@@ -87,8 +89,62 @@ def export_batch_results(results: List[Dict], output_path: str,
         output_path: 输出文件路径
         reference_name: 参考序列名称
         algorithm: 使用的算法
+        fmt: 导出格式 ('txt', 'csv', 'tsv')
     """
     _ensure_directory(output_path)
+    
+    if fmt == 'csv':
+        _export_batch_csv(results, output_path, reference_name, algorithm, delimiter=',')
+    elif fmt == 'tsv':
+        _export_batch_csv(results, output_path, reference_name, algorithm, delimiter='\t')
+    else:
+        _export_batch_txt(results, output_path, reference_name, algorithm)
+
+
+def _export_batch_csv(results: List[Dict], output_path: str, 
+                      reference_name: str, algorithm: str, delimiter: str) -> None:
+    """
+    导出批量比对结果为CSV/TSV格式
+    
+    Args:
+        results: 批量比对结果列表
+        output_path: 输出文件路径
+        reference_name: 参考序列名称
+        algorithm: 使用的算法
+        delimiter: 分隔符 (',' for CSV, '\t' for TSV)
+    """
+    with open(output_path, 'w', encoding='utf-8-sig') as f:
+        f.write(f"# 参考序列: {reference_name}\n")
+        f.write(f"# 算法: {algorithm}\n")
+        f.write(f"# 导出格式: {'CSV' if delimiter == ',' else 'TSV'}\n")
+        
+        headers = ['序号', '序列名称', '原始序列长度', '比对后长度', '得分', 
+                   '相似度(%)', '匹配数', '错配数', 'Gap数', '原始序列']
+        f.write(delimiter.join(headers) + '\n')
+        
+        for i, result in enumerate(results, 1):
+            row = [
+                str(i),
+                f'"{result["name"]}"',
+                str(len(result['sequence'])),
+                str(result['aligned_length']),
+                f"{result['score']:.1f}",
+                f"{result['similarity']:.2f}",
+                str(result['matches']),
+                str(result['mismatches']),
+                str(result['gaps']),
+                f'"{result["sequence"]}"'
+            ]
+            f.write(delimiter.join(row) + '\n')
+    
+    print(f"批量比对结果已导出为 {'CSV' if delimiter == ',' else 'TSV'} 格式: {output_path}")
+
+
+def _export_batch_txt(results: List[Dict], output_path: str, 
+                      reference_name: str, algorithm: str) -> None:
+    """
+    导出批量比对结果为文本格式
+    """
     with open(output_path, 'w', encoding='utf-8') as f:
         f.write(f"批量比对结果\n")
         f.write(f"参考序列: {reference_name}\n")
